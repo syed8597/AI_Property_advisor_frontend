@@ -7,7 +7,6 @@ import {
 } from "lucide-react";
 import { useLogout } from '../hooks/useLogout';
 import { useProfile } from '../hooks/useProfile';
-
 const InvestorDashboard = () => {
   const { user } = useAuthStore();
   const [activeTab, setActiveTab] = useState("overview");
@@ -15,12 +14,10 @@ const InvestorDashboard = () => {
   const { profile, loading, error, updateProfile, fetchProfile } = useProfile();
   const [showProfileModal, setShowProfileModal] = useState(false);
   const [updateMessage, setUpdateMessage] = useState("");
-
   const [profileForm, setProfileForm] = useState({
     min_budget: '', max_budget: '', preferred_locations: [], investment_goal: 'MIXED',
     risk_tolerance: 'MEDIUM', address: '', city: '', state: '', country: 'USA', zipcode: ''
   });
-
   const investmentGoals = [
     { value: 'RENTAL_INCOME', label: 'Rental Income' },
     { value: 'CAPITAL_APPRECIATION', label: 'Capital Appreciation' },
@@ -39,6 +36,7 @@ const InvestorDashboard = () => {
       profile.investment_goal, profile.risk_tolerance];
     return Math.round((fields.filter(Boolean).length / fields.length) * 100);
   };
+
 
   const profileCompletion = calculateProfileCompletion();
 

@@ -8,6 +8,10 @@ export const useAuthStore = create(
       accessToken: null,
       refreshToken: null,
       isAuthenticated: false,
+      isLoading: true, // Add loading state
+
+      // Initialize - call this after store is ready
+      setLoading: (loading) => set({ isLoading: loading }),
 
       // Login action
       login: (user, accessToken, refreshToken) => {
@@ -19,25 +23,27 @@ export const useAuthStore = create(
           accessToken,
           refreshToken,
           isAuthenticated: true,
+          isLoading: false,
         });
       },
 
       // Logout action
       logout: () => {
-  // Clear localStorage tokens
-  localStorage.removeItem("access_token");
-  localStorage.removeItem("refresh_token");
-  
-  // Clear zustand persist storage
-  localStorage.removeItem("auth-storage");
+        // Clear localStorage tokens
+        localStorage.removeItem("access_token");
+        localStorage.removeItem("refresh_token");
+        
+        // Clear zustand persist storage
+        localStorage.removeItem("auth-storage");
 
-  set({
-    user: null,
-    accessToken: null,
-    refreshToken: null,
-    isAuthenticated: false,
-  });
-},
+        set({
+          user: null,
+          accessToken: null,
+          refreshToken: null,
+          isAuthenticated: false,
+          isLoading: false,
+        });
+      },
 
       // Update user
       updateUser: (user) => {
@@ -53,6 +59,7 @@ export const useAuthStore = create(
 
         set({ accessToken, refreshToken });
       },
+
       // Check if user is authenticated
       checkAuth: () => {
         const token = localStorage.getItem("access_token");
@@ -65,6 +72,11 @@ export const useAuthStore = create(
         user: state.user,
         isAuthenticated: state.isAuthenticated,
       }),
+      // Critical: Set loading to false after rehydration
+      onRehydrateStorage: () => (state) => {
+        // This runs after storage is loaded
+        return state?.setLoading(false);
+      },
     }
   )
 );

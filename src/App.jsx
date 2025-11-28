@@ -1,5 +1,7 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { Toaster } from 'react-hot-toast';
+import { useEffect } from 'react';
+import { useAuthStore } from './store/authStore';
 import ProtectedRoute from './components/ProtectedRoute';
 import PublicRoute from './components/PublicRoute';
 import Register from "./features/account/Register";
@@ -11,7 +13,28 @@ import Profile from "./features/account/Profile";
 import ChangePassword from "./features/account/ChangePassword";
 import NotFound from "./pages/NotFound";
 import './index.css';
+
 function App() {
+  const { isAuthenticated, user, logout, setLoading } = useAuthStore();
+
+  useEffect(() => {
+    // Verify token on app load
+    const verifyAuth = () => {
+      const token = localStorage.getItem('access_token');
+      
+      // If no token but state says authenticated, logout
+      if (!token && isAuthenticated) {
+        console.log('No token found, logging out');
+        logout();
+      }
+      
+      // Set loading to false after check
+      setLoading(false);
+    };
+
+    verifyAuth();
+  }, []);
+
   return (
     <BrowserRouter>
       {/* Toast Notifications */}
@@ -57,9 +80,13 @@ function App() {
       <Routes>
         {/* Public Routes - Only for non-logged-in users */}
         <Route 
-  path="/" 
-  element={<LandingPage />}  
-/>
+          path="/" 
+          element={
+            <PublicRoute>
+              <LandingPage />
+            </PublicRoute>
+          }
+        />
         <Route 
           path="/auth/register" 
           element={
@@ -87,6 +114,7 @@ function App() {
             </ProtectedRoute>
           } 
         />
+        
         {/* Protected Routes - Only for Advisors */}
         <Route 
           path="/advisor/dashboard" 
@@ -96,6 +124,7 @@ function App() {
             </ProtectedRoute>
           } 
         />
+        
         {/* Protected Routes - For all logged-in users */}
         <Route 
           path="/app/profile" 

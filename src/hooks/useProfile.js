@@ -1,11 +1,9 @@
 import { useState, useEffect } from 'react';
 import accountApi from '../api/account';
-
 export const useProfile = () => {
   const [profile, setProfile] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-
   const fetchProfile = async () => {
     setLoading(true);
     setError(null);
@@ -18,7 +16,6 @@ export const useProfile = () => {
       setLoading(false);
     }
   };
-
   const updateProfile = async (profileData) => {
     setLoading(true);
     setError(null);
@@ -33,11 +30,9 @@ export const useProfile = () => {
       setLoading(false);
     }
   };
-
   useEffect(() => {
     fetchProfile();
   }, []);
-  
   return {
     profile,
     loading,

@@ -1,7 +1,6 @@
 import axios from "axios";
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:8000/api";
-
 // Create axios instance with default config
 export const apiClient = axios.create({
   baseURL: API_BASE_URL,
@@ -35,7 +34,6 @@ apiClient.interceptors.request.use(
   },
   (error) => Promise.reject(error)
 );
-
 // Response interceptor - Handle token refresh and errors
 apiClient.interceptors.response.use(
   (response) => response,

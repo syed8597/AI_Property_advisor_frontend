@@ -5,10 +5,11 @@ import {
   Home, Users, Building2, FileText, Settings, LogOut, Bell, Search,
   DollarSign, Calendar, ArrowUpRight, Filter, Download, User, Edit, 
   AlertCircle, CheckCircle, TrendingUp, Phone, Mail, BarChart3, Eye, 
-  UserPlus, RefreshCw, UserCheck, Loader2, MapPin
+  UserPlus, RefreshCw, UserCheck, Loader2, MapPin,
+  Settings2Icon,
+  FileSliders
 } from "lucide-react";
 import { useLogout } from '../hooks/useLogout';
-
 const AdvisorDashboard = () => {
   const { user } = useAuthStore();
   const { profile, loading, error, profileExists, fetchProfile, updateProfile } = useAdvisorProfile();
@@ -17,7 +18,6 @@ const AdvisorDashboard = () => {
   const [showProfileModal, setShowProfileModal] = useState(false);
   const [updateMessage, setUpdateMessage] = useState("");
   const [isCreatingProfile, setIsCreatingProfile] = useState(false);
-
   const [profileForm, setProfileForm] = useState({
     license_number: '', 
     years_of_experience: '', 
@@ -72,23 +72,20 @@ const AdvisorDashboard = () => {
       setUpdateMessage({ type: 'error', text: err.response?.data?.error || 'Failed to save profile.' });
     }
   };
-
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
     setProfileForm(prev => ({ ...prev, [name]: type === 'checkbox' ? checked : value }));
   };
-
   const calculateProfileCompletion = () => {
     if (!profile) return 0;
     const fields = [profile.license_number, profile.years_of_experience, profile.specialization, profile.company_name, profile.bio];
     return Math.round((fields.filter(Boolean).length / fields.length) * 100);
   };
-
+  
   const formatCurrency = (amount) => {
     if (!amount) return '$0';
     return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', minimumFractionDigits: 0 }).format(amount);
   };
-
   const advisorStats = profileExists ? [
     { title: "Total Clients", value: profile?.total_clients?.toString() || "0", change: "+0 this month", icon: Users, bgColor: "bg-blue-50", textColor: "text-blue-600" },
     { title: "Active Properties", value: profile?.active_properties?.toString() || "0", change: "+0 new", icon: Building2, bgColor: "bg-green-50", textColor: "text-green-600" },
